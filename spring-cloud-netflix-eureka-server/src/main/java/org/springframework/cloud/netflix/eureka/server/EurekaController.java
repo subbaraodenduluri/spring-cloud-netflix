@@ -167,10 +167,13 @@ public class EurekaController {
 			apps.add(appData);
 			appData.put("name", app.getName());
 			Map<String, Integer> amiCounts = new HashMap<>();
+			Map<String, String> versions = new HashMap<>();
+			
 			Map<InstanceInfo.InstanceStatus, List<Pair<String, String>>> instancesByStatus = new HashMap<>();
 			Map<String, Integer> zoneCounts = new HashMap<>();
 			for (InstanceInfo info : app.getInstances()) {
 				String id = info.getId();
+				versions = info.getMetadata();
 				String url = info.getStatusPageUrl();
 				InstanceInfo.InstanceStatus status = info.getStatus();
 				String ami = "n/a";
@@ -214,6 +217,7 @@ public class EurekaController {
 				LinkedHashMap<String, Object> instanceData = new LinkedHashMap<>();
 				instanceInfos.add(instanceData);
 				instanceData.put("status", entry.getKey());
+				instanceData.put("versions", versions.entrySet());
 				ArrayList<Map<String, Object>> instances = new ArrayList<>();
 				instanceData.put("instances", instances);
 				instanceData.put("isNotUp", status != InstanceInfo.InstanceStatus.UP);
