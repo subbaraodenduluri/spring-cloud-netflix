@@ -168,7 +168,7 @@ public class EurekaController {
 			appData.put("name", app.getName());
 			Map<String, Integer> amiCounts = new HashMap<>();
 			Map<String, String> versions = new HashMap<>();
-			
+			List<Map>  versionList = new ArrayList<>();
 			Map<InstanceInfo.InstanceStatus, List<Pair<String, String>>> instancesByStatus = new HashMap<>();
 			Map<String, Integer> zoneCounts = new HashMap<>();
 			for (InstanceInfo info : app.getInstances()) {
@@ -203,11 +203,13 @@ public class EurekaController {
 					instancesByStatus.put(status, list);
 				}
 				list.add(new Pair<>(id, url));
+				versionList.add(versions);
 			}
 			appData.put("amiCounts", amiCounts.entrySet());
 			appData.put("zoneCounts", zoneCounts.entrySet());
 			ArrayList<Map<String, Object>> instanceInfos = new ArrayList<>();
 			appData.put("instanceInfos", instanceInfos);
+			int counter = 0;
 			for (Iterator<Map.Entry<InstanceInfo.InstanceStatus, List<Pair<String, String>>>> iter = instancesByStatus
 					.entrySet().iterator(); iter.hasNext();) {
 				Map.Entry<InstanceInfo.InstanceStatus, List<Pair<String, String>>> entry = iter
@@ -217,7 +219,6 @@ public class EurekaController {
 				LinkedHashMap<String, Object> instanceData = new LinkedHashMap<>();
 				instanceInfos.add(instanceData);
 				instanceData.put("status", entry.getKey());
-				instanceData.put("versions", versions.entrySet());
 				ArrayList<Map<String, Object>> instances = new ArrayList<>();
 				instanceData.put("instances", instances);
 				instanceData.put("isNotUp", status != InstanceInfo.InstanceStatus.UP);
@@ -241,6 +242,10 @@ public class EurekaController {
 					instance.put("url", url);
 					boolean isHref = url != null && url.startsWith("http");
 					instance.put("isHref", isHref);
+					Map tempVersion = versionList.get(counter);
+					counter++;
+					instance.put("versions", tempVersion.entrySet());
+
 					/*
 					 * String id = p.first(); String url = p.second(); if(url != null &&
 					 * url.startsWith("http")){

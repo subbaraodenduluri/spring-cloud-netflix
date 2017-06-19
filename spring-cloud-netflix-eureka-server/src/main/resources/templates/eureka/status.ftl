@@ -60,12 +60,14 @@
                 </td>
                 <td>
                 <#list app.instanceInfos as instanceInfo>
-               <#list instanceInfo.versions as version>
+                     <#list instanceInfo.instances as instance>
+               <#list instance.versions as version>
                     <b>${version.value}</b>
-                  </#list>
-                     <#if instanceInfo_has_next>,</#if>
-               
+                     <#if instance_has_next>,</#if>
+                              </#list>
+   
                       </#list>
+                        </#list>
               </td> 
               </tr>
             </#list>
